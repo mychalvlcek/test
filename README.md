@@ -2,7 +2,7 @@ PagesBundle
 ==================
 
  * [configuration](#configuration)
- * [page data](#pagedata-usage)
+ * [page data](#pagedata---usage)
  * [translations](#translations)
  * [static texts](#static-texts)
 
