@@ -41,9 +41,9 @@ pages:
 
  **PageWidgetData**
 
-| name | entity | conditions | ordering | count |
-| ----------------- | ------------- | ----------------- | ------------- | ------------- |
-| example_clinic_listing |  \AppBundle\Entity\Clinic  | [] | name DESC, id ASC | 3 |
+| name | entity | conditions | ordering | count | template | has_detail |
+| ----------------- | ------------- | ----------------- | ------------- | ------------- | ------------- | ------------- |
+| example_clinic_listing |  \AppBundle\Entity\Clinic  | [] | name DESC, id ASC | 3 |  | t/f |
 
 
 ## Pagedata - usage
@@ -64,33 +64,31 @@ create widget with its own data; data example here:
  * **count**: `3` - max 3 records (0 or blank = unlimited)
  * **ordering**: `name DESC, id ASC` - ordering of records
 
-in twig template:
+in twig template you can find page data in `page` variable, properties of page are accessible via dot notation (`page.title`):
 ```twig
-// PagesBundle/Resources/views/page/homepage.html.twig
+{# PagesBundle/Resources/views/page/homepage.html.twig #}
 {% dump(page) %}
 
-// used to render all widgets with "position" property set to "top"
+{# used to render all widgets with "position" property set to "top" #}
 {% include 'PagesBundle:widget:render.html.twig' with { 'widgets': page.widgets, 'position': 'top' } only %}
 ```
 
 ```twig
-// PagesBundle/Resources/views/widget/render.html.twig
-{% set tpl_default = 'PagesBundle:widget/templates:default.html.twig' %}
+{# PagesBundle/Resources/views/widget/render.html.twig #}
 
 {% for widget in widgets if widget.position == position %}
-	{% include [widget.template, tpl_default] with { 'widget': widget } only %}
+	{% include [widget.template, widget_default_template] with { 'widget': widget } only %}
 {% endfor %}
 ```
 
 ```twig
-// PagesBundle/Resources/views/widget/templates/default.html.twig
+{# PagesBundle/Resources/views/widget/templates/default.html.twig #}
 <div class="widget">
     {{widget.content | raw}}
     {{ dump(widget.data) }}
-    // i.e. widget.data['example_clinic_listing']
+    {# i.e. widget.data['example_clinic_listing'] #}
 </div>
 ```
-
 
 ## translations
 
@@ -112,8 +110,8 @@ twig template:
 {{ 'choice example'|transchoice(5, {'%var%': 'Fabien'}) }}
 ```
 
-## # static texts
-you can set some static texts to `Page` entity in admin panel (field "texts").
+## static texts
+You can set some static texts to `Page` entity in admin panel (field "texts").
 
 ```
 {
@@ -121,6 +119,8 @@ you can set some static texts to `Page` entity in admin panel (field "texts").
     "another_text": "Lorem ipsum.."
 }
 ```
+
+Or you can set static texts shared by all pages. Just create record of `StaticTexts` entity same way as above.
 
 twig template:
 
